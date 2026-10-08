@@ -53,3 +53,6 @@ make
 ```bash
 make test
 ```
+
+The test suite includes deterministic differential arithmetic checks against the compiler's
+native 128-bit integer extension. Run memory and UB checks with `make sanitize`.
