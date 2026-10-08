@@ -20,7 +20,8 @@ Supported operations:
 The implementation keeps the tree balanced after insertions and removals using AVL rotations and frees all allocated memory in the destructor.
 
 ## Structure
-- `src/AVLTree.hpp` - public AVL tree interface
+- `include/AVLTree.hpp` - public AVL tree interface required by the assignment
+- `src/AVLTree.hpp` - compatibility forwarding header
 - `src/AVLTree.cpp` - AVL tree implementation
 - `src/main.cpp` - small demo program
 - `tests/test_avl_tree.cpp` - self-checking test suite
@@ -39,3 +40,6 @@ make
 ```bash
 make test
 ```
+
+The tests include deterministic randomized comparison with `std::set`.
+Memory and undefined-behavior checks can be run with `make sanitize`.

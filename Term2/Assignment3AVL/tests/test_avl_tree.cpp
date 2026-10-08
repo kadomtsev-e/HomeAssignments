@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <random>
 #include <set>
 #include <sstream>
 #include <string>
@@ -146,6 +147,36 @@ int main()
     require(oracleTree.empty(), "tree is empty after removing everything");
     require(oracleTree.size() == 0, "size returns to zero after removing everything");
     requireEqual(oracleTree.values(), {}, "values() is empty after removing everything");
+
+    std::mt19937 generator(0xA71U);
+    std::uniform_int_distribution<int> values(-500, 500);
+    std::bernoulli_distribution insertOperation(0.55);
+    AVLTree randomTree;
+    std::set<int> randomOracle;
+
+    for (int step = 0; step < 20000; ++step) {
+        const int value = values(generator);
+        if (insertOperation(generator)) {
+            require(
+                randomTree.insert(value) == randomOracle.insert(value).second,
+                "random insertion matches std::set");
+        } else {
+            require(
+                randomTree.remove(value) == (randomOracle.erase(value) != 0),
+                "random removal matches std::set");
+        }
+
+        require(randomTree.size() == randomOracle.size(), "randomized size matches std::set");
+        requireEqual(randomTree.values(), asVector(randomOracle), "randomized values match std::set");
+        require(
+            randomTree.contains(value) == (randomOracle.count(value) != 0),
+            "randomized contains matches std::set");
+    }
+
+    for (int iteration = 0; iteration < 100; ++iteration) {
+        AVLTree shortLived(randomTree);
+        requireEqual(shortLived.values(), asVector(randomOracle), "repeated copies preserve content");
+    }
 
     std::cout << "All AVL tree tests passed.\n";
     return 0;
