@@ -25,3 +25,12 @@ make
 ./bin/odr_extern
 ./bin/odr_inline
 ```
+
+Both programs print `ok` and also verify internally that the shared request counter is exactly two.
+
+## Test
+```bash
+make test
+```
+
+Run the same checks with AddressSanitizer and UndefinedBehaviorSanitizer using `make sanitize`.
