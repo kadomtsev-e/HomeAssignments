@@ -193,6 +193,33 @@ int main()
             "malformed literal reports a numeric parsing error");
     }
 
+    {
+        bool rad_on = true;
+        const double current = -2;
+        CerrCapture capture;
+
+        const double updated = process_line(current, rad_on, "^ 0.5");
+        require_near(updated, current, "undefined power keeps register");
+        require_contains(capture.str(), "Bad arguments for power", "undefined power is reported");
+    }
+
+    {
+        bool rad_on = false;
+        double current = 0;
+
+        current = process_line(current, rad_on, "1");
+        current = process_line(current, rad_on, "ACOS");
+        require_near(current, 0, "acos returns degrees in degree mode");
+
+        current = process_line(current, rad_on, "0");
+        current = process_line(current, rad_on, "ACTN");
+        require_near(current, 90, "actn returns degrees in degree mode");
+
+        current = process_line(current, rad_on, "45");
+        current = process_line(current, rad_on, "CTN");
+        require_near(current, 1, "ctn works in degree mode");
+    }
+
     std::cout << "All calculator tests passed.\n";
     return 0;
 }

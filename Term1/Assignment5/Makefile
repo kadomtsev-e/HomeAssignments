@@ -1,28 +1,26 @@
-PROJECT = calc_demo
-TEST_PROJECT = test_calc
+PROJECT = matrix
+TEST_PROJECT = test_matrix
 
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Wpedantic -Werror -Isrc
-SANITIZERS = -fsanitize=address,undefined -fno-omit-frame-pointer
+CXXFLAGS = -Werror -Wpedantic -Wall -Isrc
+LDFLAGS = 
+GTEST_LIBS = -lgtest -lgtest_main -pthread
+
+SRC = src/main.cpp src/rational.cpp
+OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
+
+TEST_SRC = tests/test_matrix.cpp src/rational.cpp
+TEST_OBJ = $(TEST_SRC:%.cpp=$(OBJ_DIR)/%.o)
 
 BIN_DIR = bin
 OBJ_DIR = obj
 
-SRC = src/main.cpp src/calc.cpp
-OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
-
-TEST_SRC = tests/test_calc.cpp src/calc.cpp
-TEST_OBJ = $(TEST_SRC:%.cpp=$(OBJ_DIR)/%.o)
-
-.PHONY: all clean cleanall test sanitize
+.PHONY: all clean cleanall test
 
 all: $(BIN_DIR)/$(PROJECT)
 
 test: $(BIN_DIR)/$(TEST_PROJECT)
 	./$(BIN_DIR)/$(TEST_PROJECT)
-
-sanitize: cleanall
-	$(MAKE) CXXFLAGS="$(CXXFLAGS) $(SANITIZERS)" test
 
 $(BIN_DIR)/$(PROJECT): $(OBJ)
 	@mkdir -p $(BIN_DIR)
@@ -30,7 +28,7 @@ $(BIN_DIR)/$(PROJECT): $(OBJ)
 
 $(BIN_DIR)/$(TEST_PROJECT): $(TEST_OBJ)
 	@mkdir -p $(BIN_DIR)
-	$(CXX) -o $@ $^ $(CXXFLAGS)
+	$(CXX) -o $@ $^ $(CXXFLAGS) $(GTEST_LIBS)
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)

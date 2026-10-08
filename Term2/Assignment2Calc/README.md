@@ -51,3 +51,5 @@ make
 ```bash
 make test
 ```
+
+Run the same suite with AddressSanitizer and UndefinedBehaviorSanitizer using `make sanitize`.

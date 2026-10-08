@@ -358,6 +358,10 @@ bool apply_binary(const Op op, const double left, const double right, double& re
             return true;
         case Op::Pow:
             result = std::pow(left, right);
+            if (!std::isfinite(result)) {
+                std::cerr << "Bad arguments for power: " << left << ", " << right << std::endl;
+                return false;
+            }
             return true;
         default:
             return false;
