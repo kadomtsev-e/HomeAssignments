@@ -6,6 +6,10 @@ int main() {
     touchA();
     touchB();
 
-    std::cout << g_name << ": requests=" << g_requests << '\n';
+    if (g_requests != 2) {
+        return 1;
+    }
+
+    std::cout << "ok\n";
     return 0;
 }
